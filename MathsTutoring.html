@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Math Tutoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+            background-size: 400% 400%;
+            animation: rainbow 10s ease infinite;
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        h1 {
+            color: #ff4500;
+        }
+        .math-problem {
+            font-size: 24px;
+            color: #1e90ff;
+            margin: 20px;
+        }
+        .math-image {
+            margin: 20px;
+            width: 100px;
+            height: 100px;
+        }
+        .input-answer {
+            font-size: 20px;
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid #1e90ff;
+            border-radius: 8px;
+        }
+        .button {
+            background-color: #ff6347;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+        }
+        .button:hover {
+            background-color: #ff4500;
+        }
+        .reward {
+            font-size: 20px;
+            color: #32cd32;
+            display: none;
+            margin: 20px;
+        }
+        .navigation {
+            margin: 20px;
+        }
+        .clue {
+            font-size: 18px;
+            color: #ffa500;
+            display: none;
+        }
+        .trophy {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            animation: dance 2s infinite;
+        }
+        @keyframes dance {
+            0% { transform: rotate(0deg) translate(0, 0); }
+            25% { transform: rotate(10deg) translate(10px, 10px); }
+            50% { transform: rotate(0deg) translate(0, 20px); }
+            75% { transform: rotate(-10deg) translate(-10px, 10px); }
+            100% { transform: rotate(0deg) translate(0, 0); }
+        }
+        .top-left { top: 20px; left: 20px; }
+        .top-right { top: 20px; right: 20px; }
+        .bottom-left { bottom: 20px; left: 20px; }
+        .bottom-right { bottom: 20px; right: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Cool and Interesting Math Tutoring for Isabella and Samuel</h1>
+    <p>Welcome to your fun math adventure! Let's solve some problems and earn rewards!</p>
+    
+    <div class="math-problem" id="math-problem">What is 3 + 2?</div>
+    <img src="" alt="" class="math-image" id="math-image">
+    <input type="text" id="answer" class="input-answer" placeholder="Type your answer here">
+    <button class="button" onclick="checkAnswer()">Submit</button>
+    <div class="reward" id="reward">Great job! You earned a star! ⭐</div>
+    <div class="clue" id="clue">Hint: Count the fingers on one hand!</div>
+    
+    <div class="navigation">
+        <button class="button" onclick="previousTask()">Previous</button>
+        <button class="button" onclick="skipTask()">Skip</button>
+        <button class="button" onclick="showClue()">Clue</button>
+    </div>
+
+    <audio id="applause" src="https://www.soundjay.com/people/applause-01.mp3"></audio>
+    <audio id="drumroll" src="https://www.soundjay.com/button/drumroll-01.mp3"></audio>
+
+    <img src="https://via.placeholder.com/50" class="trophy top-left" id="trophy-top-left" style="display: none;">
+    <img src="https://via.placeholder.com/50" class="trophy top-right" id="trophy-top-right" style="display: none;">
+    <img src="https://via.placeholder.com/50" class="trophy bottom-left" id="trophy-bottom-left" style="display: none;">
+    <img src="https://via.placeholder.com/50" class="trophy bottom-right" id="trophy-bottom-right" style="display: none;">
+
+    <script>
+        const tasks = [
+            { problem: "What is 3 + 2?", answer: "5", clue: "Hint: Count the fingers on one hand!", image: "https://via.placeholder.com/100" },
+            { problem: "What is 4 - 1?", answer: "3", clue: "Hint: Think about how many legs a tripod has.", image: "https://via.placeholder.com/100" },
+            { problem: "What is 2 + 3?", answer: "5", clue: "Hint: It's the same as 3 + 2!", image: "https://via.placeholder.com/100" },
+            { problem: "What is 5 - 2?", answer: "3", clue: "Hint: How many legs does a tricycle have?", image: "https://via.placeholder.com/100" },
+            { problem: "What is 6 - 4?", answer: "2", clue: "Hint: How many wings does a butterfly have?", image: "https://via.placeholder.com/100" },
+            { problem: "What is 1 + 1?", answer: "2", clue: "Hint: How many eyes do you have?", image: "https://via.placeholder.com/100" },
+            { problem: "What is 7 - 3?", answer: "4", clue: "Hint: How many wheels does a car have?", image: "https://via.placeholder.com/100" },
+            { problem: "What is 8 - 6?", answer: "2", clue: "Hint: How many ears do you have?", image: "https://via.placeholder.com/100" },
+            { problem: "What is 9 - 7?", answer: "2", clue: "Hint: How many nostrils do you have?", image: "https://via.placeholder.com/100" },
+            { problem: "What is 10 - 8?", answer: "2", clue: "Hint: How many hands do you have?", image: "https://via.placeholder.com/100" },
+            { problem: "Sophie has 3 apples and gets 2 more. How many does she have now?", answer: "5", clue: "Hint: Think about adding apples.", image: "https://via.placeholder.com/100" },
+            { problem: "Tom has 5 balloons and gives 2 to his friend. How many does he have left?", answer: "3", clue: "Hint: Subtract the given balloons.", image: "https://via.placeholder.com/100" },
+            { problem: "You see 4 birds on a tree and 2 more join them. How many birds are there now?", answer: "6", clue: "Hint: Think about the total number of birds.", image: "https://via.placeholder.com/100" },
+            { problem: "There are 7 cookies and you eat 3. How many cookies are left?", answer: "4", clue: "Hint: Subtract the eaten cookies.", image: "https://via.placeholder.com/100" },
+            { problem: "Lucy has 6 crayons and finds 2 more. How many crayons does she have in total?", answer: "8", clue: "Hint: Add the found crayons.", image: "https://via.placeholder.com/100" },
+            { problem: "Jack has 8 cars and gives 3 to his brother. How many cars does he have now?", answer: "5", clue: "Hint: Subtract the given cars.", image: "https://via.placeholder.com/100" },
+            { problem: "You have 9 chocolates and give 4 to your friend. How many chocolates are left?", answer: "5", clue: "Hint: Subtract the given chocolates.", image: "https://via.placeholder.com/100" },
+            { problem: "There are 10 ducks in the pond and 2 swim away. How many ducks are left?", answer: "8", clue: "Hint: Subtract the ducks that swim away.", image: "https://via.placeholder.com/100" },
+            { problem: "Anna has 7 candies and gets 1 more. How many candies does she have now?", answer: "8", clue: "Hint: Add the new candy.", image: "https://via.placeholder.com/100" },
+            { problem: "There are 4 cats and 3 more join them. How many cats are there now?", answer: "7", clue: "Hint: Think about the total number of cats.", image: "https://via.placeholder.com/100" }
+        ];
+
+        let currentTask = 0;
+        let stars = 0;
+
+        function displayTask(index) {
+            document.getElementById("math-problem").innerHTML = tasks[index].problem;
+            document.getElementById("math-image").src = tasks[index].image;
+            document.getElementById("answer").value = "";
+            document.getElementById("reward").style.display = "none";
+            document.getElementById("clue").style.display = "none";
+        }
+
+        function checkAnswer() {
+            const answer = document.getElementById("answer").value;
+            if (answer === tasks[currentTask].answer) {
+                stars++;
+                document.getElementById("reward").style.display = "block";
+                document.getElementById("reward").innerHTML = `Great job! You earned a star! ⭐ Total Stars: ${stars}`;
+                document.getElementById("applause").play();
+                document.getElementById("trophy-top-left").style.display = "block";
+                document.getElementById("trophy-top-right").style.display = "block";
+                document.getElementById("trophy-bottom-left").style.display = "block";
+                document.getElementById("trophy-bottom-right").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("trophy-top-left").style.display = "none";
+                    document.getElementById("trophy-top-right").style.display = "none";
+                    document.getElementById("trophy-bottom-left").style.display = "none";
+                    document.getElementById("trophy-bottom-right").style.display = "none";
+                    currentTask++;
+                    if (currentTask < tasks.length) {
+                        displayTask(currentTask);
+                    } else {
+                        document.getElementById("math-problem").innerHTML = "Congratulations! You've completed all the tasks!";
+                        document.getElementById("answer").style.display = "none";
+                        document.getElementById("reward").style.display = "none";
+                        document.getElementById("clue").style.display = "none";
+                        document.querySelectorAll(".button").forEach(button => button.style.display = "none");
+                        document.getElementById("drumroll").play();
+                    }
+                }, 3000);
+            } else {
+                document.getElementById("reward").style.display = "block";
+                document.getElementById("reward").innerHTML = "Oops! Try again!";
+            }
+        }
+
+        function previousTask() {
+            if (currentTask > 0) {
+                currentTask--;
+                displayTask(currentTask);
+            }
+        }
+
+        function skipTask() {
+            if (currentTask < tasks.length - 1) {
+                currentTask++;
+                displayTask(currentTask);
+            }
+        }
+
+        function showClue() {
+            document.getElementById("clue").innerHTML = tasks[currentTask].clue;
+            document.getElementById("clue").style.display = "block";
+        }
+
+        displayTask(currentTask);
+    </script>
+</body>
+</html>
